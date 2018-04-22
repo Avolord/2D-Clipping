@@ -25,22 +25,13 @@ class Polygon  {
     a.Rectangle(b,"black","stroke")
   }
 
-  // Interpolate() {
-  //   Canvas.StartDraw("black");
-  //   Canvas.ctx.moveTo(this.temp[0].x,this.temp[0].y);
-  //   for(let i=this.temp.length-1;i>=0;i--) {
-  //     Canvas.ctx.lineTo(this.temp[i].x,this.temp[i].y);
-  //   }
-  //   Canvas.EndDraw("stroke");
-  // }
-
   Interpolate() {
-    for(let P1 of this.temp) {
-      for(let P2 of this.temp) {
-        if(P1 == P2) {continue}
-        P1.Connect(P2,"black");
-      }
+    Canvas.StartDraw("black");
+    Canvas.ctx.moveTo(this.temp[0].x,this.temp[0].y);
+    for(let i=this.temp.length-1;i>=0;i--) {
+      Canvas.ctx.lineTo(this.temp[i].x,this.temp[i].y);
     }
+    Canvas.EndDraw("stroke");
   }
 
   move(Vector) {
