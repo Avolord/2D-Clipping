@@ -1,6 +1,7 @@
 Animation(true);
+let rad = 3;
 let P1 = new Polygon();
-		P1.SymPolygon(300,300,10,100);
+		P1.SymPolygon(200,200,10,rad);
 let r = [a,b];
 function setup() {
 	P1.show(r);
@@ -9,8 +10,7 @@ function setup() {
 
 function draw() {
 	P1.show(r);
-	P1.SymPolygon(mouseX,mouseY,10,100);
-	P1.move(new V2D(0.8,0));
+	P1.SymPolygon(mouseX,mouseY,rad,100);
 }
 
 function NoLoop() {
@@ -29,11 +29,11 @@ var before,now,fps;
 before=Date.now();
 fps=0;
 requestAnimationFrame(
-    function loop(){
+    function loopz(){
         now=Date.now();
         fps=Math.round(1000/(now-before));
         before=now;
-        requestAnimationFrame(loop);
+        requestAnimationFrame(loopz);
 				if(fps < 58) {
         document.getElementById("Count").innerHTML = fps;
 			} else {

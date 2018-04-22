@@ -1,11 +1,11 @@
 //Uses AvoLib.js
-let a = new V2D(100,0);
-let b = new V2D(600,700);
+let a = new V2D(0,0);
+let b = new V2D(400,400);
 
 class Polygon  {
   constructor(Points) {
     this.Points = [];
-    this.temp = [];
+    this.temp = new Array(this.Points.length);
     if(!Points) {return}
     for(let P of Points) {
       this.Ponts.push(P);
@@ -16,7 +16,7 @@ class Polygon  {
     this.Clipp(range);
     this.inRange(range);
     for(let P of this.temp) {
-      P.draw(10,"red");
+      P.show("red");
     }
     if(this.temp.length>0) {
     this.Interpolate();
@@ -25,13 +25,22 @@ class Polygon  {
     a.Rectangle(b,"black","stroke")
   }
 
+  // Interpolate() {
+  //   Canvas.StartDraw("black");
+  //   Canvas.ctx.moveTo(this.temp[0].x,this.temp[0].y);
+  //   for(let i=this.temp.length-1;i>=0;i--) {
+  //     Canvas.ctx.lineTo(this.temp[i].x,this.temp[i].y);
+  //   }
+  //   Canvas.EndDraw("stroke");
+  // }
+
   Interpolate() {
-    Canvas.StartDraw("black");
-    Canvas.ctx.moveTo(this.temp[0].x,this.temp[0].y);
-    for(let i=this.temp.length-1;i>=0;i--) {
-      Canvas.ctx.lineTo(this.temp[i].x,this.temp[i].y);
+    for(let P1 of this.temp) {
+      for(let P2 of this.temp) {
+        if(P1 == P2) {continue}
+        P1.Connect(P2,"black");
+      }
     }
-    Canvas.EndDraw("fill");
   }
 
   move(Vector) {
