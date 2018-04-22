@@ -6,10 +6,12 @@ class Polygon  {
   constructor(Points) {
     this.Points = [];
     this.temp = new Array(this.Points.length);
+    this.rangeType = "box";
     if(!Points) {return}
     for(let P of Points) {
       this.Ponts.push(P);
     }
+    this.center = this.calcCenter();
   }
 
   show(range) {
@@ -22,7 +24,6 @@ class Polygon  {
     this.Interpolate();
     }
     this.temp = [];
-    a.Rectangle(b,"black","stroke")
   }
 
   Interpolate() {
@@ -42,10 +43,11 @@ class Polygon  {
 
   inRange(range) {
     for(let P of this.Points) {
-      if(P.x > range[0].x && P.y > range[0].y && P.x < range[1].x && P.y < range[1].y) {
-        this.temp.push(P);
+        if(P.x > range[0].x && P.y > range[0].y && P.x < range[1].x && P.y < range[1].y) {
+          this.temp.push(P);
+        }
       }
-    }
+      range[0].Rectangle(range[1],"black","stroke");
   }
 
   Clipp(range) {
@@ -77,6 +79,15 @@ class Polygon  {
       angle+=angleAdd;
       this.Points.push(new V2D(x,y));
   }
+  this.center = new V2D(x_,y_)
+}
+
+calcCenter() {
+  let sum = new V2D();
+  for(let P of this.Points) {
+    sum  = sum.add(P);
+  }
+  return sum.div(this.Points.length)
 }
 
 }
