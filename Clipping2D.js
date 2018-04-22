@@ -5,7 +5,7 @@ let b = new V2D(600,700);
 class Polygon  {
   constructor(Points) {
     this.Points = [];
-    this.clipped = [];
+    this.temp = [];
     if(!Points) {return}
     for(let P of Points) {
       this.Ponts.push(P);
@@ -14,16 +14,24 @@ class Polygon  {
 
   show(range) {
     this.Clipp(range);
-    for(let P of this.Points) {
-      if(Polygon.inRange(P,range)) {
-      P.show("black");
+    this.inRange(range);
+    for(let P of this.temp) {
+      P.draw(10,"red");
     }
+    if(this.temp.length>0) {
+    this.Interpolate();
     }
-    for(let P of this.clipped) {
-      P.show();
-    }
+    this.temp = [];
     a.Rectangle(b,"black","stroke")
-    this.clipped = [];
+  }
+
+  Interpolate() {
+    Canvas.StartDraw("black");
+    Canvas.ctx.moveTo(this.temp[0].x,this.temp[0].y);
+    for(let i=this.temp.length-1;i>=0;i--) {
+      Canvas.ctx.lineTo(this.temp[i].x,this.temp[i].y);
+    }
+    Canvas.EndDraw("fill");
   }
 
   move(Vector) {
@@ -32,11 +40,11 @@ class Polygon  {
     }
   }
 
-  static inRange(P,range) {
-    if(P.x > range[0].x && P.y > range[0].y && P.x < range[1].x && P.y < range[1].y) {
-      return true
-    } else {
-      return false
+  inRange(range) {
+    for(let P of this.Points) {
+      if(P.x > range[0].x && P.y > range[0].y && P.x < range[1].x && P.y < range[1].y) {
+        this.temp.push(P);
+      }
     }
   }
 
@@ -51,8 +59,7 @@ class Polygon  {
         S.push(this.Points[i].SCHNITT(this.Points[i+1],new V2D(b.x,a.y),b));
       for(let Ps of S) {
         if(Ps) {
-          //this.Points.splice(i+1,1);
-          this.clipped.push(Ps);
+          this.temp.push(Ps);
         }
       }
     }
