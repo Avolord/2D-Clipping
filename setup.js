@@ -1,5 +1,5 @@
 Animation(true);
-let rad = 3;
+let rad = 20;
 let P1 = new Polygon();
 		P1.SymPolygon(200,200,10,rad);
 let r = [a,b];

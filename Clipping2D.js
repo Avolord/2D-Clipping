@@ -5,7 +5,7 @@ let b = new V2D(400,400);
 class Polygon  {
   constructor(Points) {
     this.Points = [];
-    this.temp = new Array(this.Points.length);
+    this.temp = [];
     this.rangeType = "box";
     if(!Points) {return}
     for(let P of Points) {
@@ -15,13 +15,14 @@ class Polygon  {
   }
 
   show(range) {
-    this.Clipp(range);
+    //this.temp = AM.copyArray(this.Points);
+    //this.Clipp(range);
     this.inRange(range);
-    for(let P of this.temp) {
-      P.show("red");
-    }
     if(this.temp.length>0) {
     this.Interpolate();
+    }
+    for(let P of this.temp) {
+      P.show("red");
     }
     this.temp = [];
   }
@@ -32,7 +33,7 @@ class Polygon  {
     for(let i=this.temp.length-1;i>=0;i--) {
       Canvas.ctx.lineTo(this.temp[i].x,this.temp[i].y);
     }
-    Canvas.EndDraw("stroke");
+    Canvas.EndDraw("fill");
   }
 
   move(Vector) {
@@ -42,9 +43,22 @@ class Polygon  {
   }
 
   inRange(range) {
-    for(let P of this.Points) {
-        if(P.x > range[0].x && P.y > range[0].y && P.x < range[1].x && P.y < range[1].y) {
-          this.temp.push(P);
+    //this.temp = AM.copyArray(this.Points);
+    for(let i in this.Points) {
+        if(this.Points[i].x > range[0].x && this.Points[i].y > range[0].y && this.Points[i].x < range[1].x && this.Points[i].y < range[1].y) {
+          this.temp.push(this.Points[i]);
+        }
+        else {
+          let index1 = (i<this.Points.length-1) ? parseInt(i)+1 : 0;
+          let index2 = (i>0) ? i-1 : this.Points.length-1;
+          let check1 = Polygon.clip(this.Points[i],this.Points[index1],range);
+          let check2 = Polygon.clip(this.Points[i],this.Points[index2],range);
+          if(check2) {
+            this.temp.push(check2);
+          }
+          if(check1) {
+            this.temp.push(check1);
+          }
         }
       }
       range[0].Rectangle(range[1],"black","stroke");
@@ -63,6 +77,21 @@ class Polygon  {
         if(Ps) {
           this.temp.push(Ps);
         }
+      }
+    }
+  }
+
+  static clip(start,stop,range) {
+    let S = [];
+    let a = range[0];
+    let b = range[1];
+      S.push(start.SCHNITT(stop,a,new V2D(a.x,b.y)));
+      S.push(start.SCHNITT(stop,a,new V2D(b.x,a.y)));
+      S.push(start.SCHNITT(stop,new V2D(a.x,b.y),b));
+      S.push(start.SCHNITT(stop,new V2D(b.x,a.y),b));
+    for(let Ps of S) {
+      if(Ps) {
+        return Ps
       }
     }
   }
